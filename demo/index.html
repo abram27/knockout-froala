@@ -35,21 +35,6 @@
 </head>
 
 <body>
-  <div id="app">
-    <h3> Editor </h3>
-    <textarea data-bind="value: html, froala: html, froalaOptions: options"></textarea>
-
-
-    <br>
-    <h3> Preview Output </h3>
-
-    <hr>
-    <pre data-bind="html: html"></pre>
-    <hr>
-
-    <br>
-  </div>
-
 
   <script src="../bower_components/froala-wysiwyg-editor/js/froala_editor.min.js"></script>
 
@@ -91,7 +76,54 @@
 <script type="text/javascript" src="../bower_components/froala-wysiwyg-editor/js/third_party/image_tui.min.js"></script>
 
   <script src="../src/knockout-froala.js"></script>
-  <script src="app.js"></script>
+
+
+  <div id='myView'>
+		<div data-bind="foreach:questions">
+      <textarea data-bind="value:questionLabel, froala: questionLabel, froalaOptions: $root.editorOptions,
+      froalaInstance:ko.observable()"></textarea>
+		</div>
+		
+    <button data-bind="click:addItem">Add Item</button>
+    <button data-bind="click:removeFirst">Remove First</button>
+	</div>  
+	
+	<script type="text/javascript">
+		function Model()
+		{
+			const self = this;
+			this.questions = ko.observableArray([{
+				questionLabel:ko.observable('first item')
+			},{
+				questionLabel:ko.observable('second item')
+			}]);
+			
+			this.addItem = function(){
+				self.questions.push({questionLabel:ko.observable('third item')});
+      }
+      
+      this.removeFirst = function(){
+        if(self.questions().length > 0)
+        {
+          self.questions.remove(self.questions()[0]);
+        }
+			}
+						
+			this.editorOptions = {
+                key: "FSC2H-9F1A17A1A5B1C3rXYf1VPUGRHYZNRJb2JVOOe1HAb2zA3B2A1A1F4E1H2A10C1B5==",
+                enter: FroalaEditor.ENTER_BR,
+                charCounterCount: false,
+                //initOnClick: true,
+                toolbarButtons: ['bold', 'italic', 'underline', '|', 'align', 'outdent', 'indent', '|', 'insertLink', 'insertImage', 'insertVideo', 'insertFile',
+                    '|', 'clearFormatting', 'html', "|", 'undo', 'redo']
+                
+            }
+		};
+		let model = new Model();
+		ko.applyBindings(model, document.getElementById('myView'));
+	</script>
+
+
 
 </body>
 </html>
